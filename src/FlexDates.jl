@@ -32,12 +32,13 @@ function show(io::IO, flexdate::FlexDate{E, T}) where {E, T}
     _print_ET(io, E, T)
 end
 
-function promote(x::FlexDate{Ex}, y::FlexDate{Ey}) where {Ex, Ey}
+function promote(x::FlexDate{Ex, <: Integer},
+                 y::FlexDate{Ey, <: Integer }) where {Ex, Ey}
     xΔ, yΔ = promote(x.Δ, y.Δ)
-    FlexDate{Ex}(xΔ), FlexDate{Ex}(yΔ, Dates.days(Ey-Ex))
+    FlexDate{Ex}(xΔ), FlexDate{Ex}(oftype(yΔ, yΔ + Dates.days(Ey-Ex)))
 end
 
-function promote(x::FlexDate{E}, y::FlexDate{E}) where E
+function promote(x::FlexDate{E, <: Integer}, y::FlexDate{E, <: Integer}) where E
     xΔ, yΔ = promote(x.Δ, y.Δ)
     FlexDate{E}(xΔ), FlexDate{E}(yΔ)
 end

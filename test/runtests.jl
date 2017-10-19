@@ -2,32 +2,37 @@ using FlexDates
 using Base.Test
 using IntervalSets
 
-E1 = Date(1980, 1, 1)
-E2 = Date(1990, 1, 1)
+@testset "constructors, equality, arithmetic" begin
+    E1 = Date(1980, 1, 1)
+    E2 = Date(1990, 1, 1)
+    
+    D1 = Date(2001, 1, 8)
+    D2 = Date(2007, 2, 9)
+    
+    F11 = FlexDate{E1, Int16}(D1)
+    F12 = FlexDate{E2, Int32}(D1)
+    
+    F21 = FlexDate{E1, Int16}(D2)
+    F22 = FlexDate{E2, Int32}(D2)
+    
+    F3 = FlexDate{E1}(0)
+    F4 = FlexDate{E1}(5)
+    F5 = FlexDate{E1}(-5)
+    
+    @test F11 == F12
+    @test F21 == F22
+    @test F11 ≠ F22
+    @test F5 < F3 < F4
+    @test F5 < E1 < F4
+    @test F3 == E1
 
-D1 = Date(2001, 1, 8)
-D2 = Date(2007, 2, 9)
+    @test F5 - F3 == FlexDay{Int64}(-5)
+    @test F3 + FlexDay{Int32}(5) == F4
+    @test F3 - FlexDay{Int32}(5) == F5
 
-F11 = FlexDate{E1, Int16}(D1)
-F12 = FlexDate{E2, Int32}(D1)
-
-F21 = FlexDate{E1, Int16}(D2)
-F22 = FlexDate{E2, Int32}(D2)
-
-F3 = FlexDate{E1}(0)
-F4 = FlexDate{E1}(5)
-F5 = FlexDate{E1}(-5)
-
-@test F11 == F12
-@test F21 == F22
-@test F11 ≠ F22
-@test F5 < F3 < F4
-@test F5 < E1 < F4
-@test F3 == E1
-
-FI = F3..F4
-
-@test length(FI) == 6
+    @test length(F3..F4) == 6
+    @test length(F4..F3) == 0
+end
 
 @testset "interval (Int16)" begin
     const FD = FlexDate{Date(2005,1,1), Int16}
@@ -44,4 +49,16 @@ FI = F3..F4
     @test repr(d2) == "2008-03-07 [2005-01-01 + Int16 days]"
 
     @test repr(d1..d3) == "2005-01-01..2009-08-11 [2005-01-01 + Int16 days]"
+end
+
+@testset "promotion" begin
+    E1 = Date(1980, 1, 1)
+    E2 = Date(1980, 5, 30)
+    D1 = Date(1970, 2, 7)
+    D2 = Date(1991, 4, 9)
+    F11 = FlexDate{E1, Int16}(D1)
+    F12 = FlexDate{E1, Int32}(D2)
+    @test promote(F11, F12) ≡ (FlexDate{E1, Int32}(D1), F12)
+    @test promote(F11, FlexDate{E2,Int16}(D2)) ≡ (F11, FlexDate{E1, Int16}(D2))
+    @test promote(F11, FlexDate{E2,Int32}(D2)) ≡ (FlexDate{E1, Int32}(D1), F12)
 end
