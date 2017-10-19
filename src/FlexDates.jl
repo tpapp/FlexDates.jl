@@ -18,6 +18,9 @@ struct FlexDate{E, T <: Integer}
     end
 end
 
+FlexDate{E, T}(year, month, day) where {E, T} =
+    FlexDate{E, T}(Date(year, month, day))
+
 struct FlexDay{T <: Integer}
     d::T
 end
