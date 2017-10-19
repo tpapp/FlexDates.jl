@@ -34,6 +34,18 @@ using IntervalSets
     @test length(F4..F3) == 0
 end
 
+@testset "FlexDay arithmetic" begin
+    @test isless(FlexDay(1), FlexDay(Int16(2)))
+    @test FlexDay(Int32(2)) + FlexDay(Int16(9)) == FlexDay(Int32(11))
+    @test FlexDay(Int32(2)) - FlexDay(Int16(9)) == FlexDay(Int32(-7))
+end
+
+@testset "FlexDate hashing" begin
+    D = Date(2001, 3, 4)
+    @test hash(FlexDate{Date(1980,1,1),Int16}(D)) ==
+               hash(FlexDate{Date(1990,2,3),Int32}(D))
+end
+
 @testset "interval (Int16)" begin
     const FD = FlexDate{Date(2005,1,1), Int16}
 

@@ -85,7 +85,7 @@ typemax(::Type{FlexDate{E, T}}) where {E, T} = FlexDate{E, T}(typemax(T))
 
 eltype(x::FlexDate{E, T}) where {E, T} = T
 
-hash(x::FlexDate, h::UInt) = hash(convert(Date, x), u)
+hash(x::FlexDate, h::UInt) = hash(convert(Date, x), h)
 
 (-)(x::FlexDate{E,T}, y::FlexDate{E,T}) where {E, T} = FlexDay{T}(x.Δ - y.Δ)
 
