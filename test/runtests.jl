@@ -28,3 +28,14 @@ F5 = FlexDate{E1}(-5)
 FI = F3..F4
 
 @test length(FI) == 6
+
+const FD = FlexDate{Date(2005,1,1), Int16}
+
+d1 = FD(2005, 1, 1)
+d2 = FD(2008, 3, 7)
+d3 = FD(2009, 8, 11)
+d4 = FD(2013, 12, 1)
+
+@test d2 ∈ d1..d3
+@test (d1..d3) ∩ (d2..d4) == d2..d3
+@test (d1..d3) ∪ (d2..d4) == d1..d4
