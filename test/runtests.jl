@@ -1,5 +1,6 @@
 using FlexDates
 using Base.Test
+using IntervalSets
 
 E1 = Date(1980, 1, 1)
 E2 = Date(1990, 1, 1)
@@ -23,3 +24,7 @@ F5 = FlexDate{E1}(-5)
 @test F5 < F3 < F4
 @test F5 < E1 < F4
 @test F3 == E1
+
+FI = F3..F4
+
+@test length(FI) == 6
