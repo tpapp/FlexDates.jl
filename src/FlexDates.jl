@@ -10,6 +10,30 @@ import Base:
 
 export FlexDate, FlexDay
 
+"""
+    FlexDate{epoch, T}(date::Date)
+    FlexDate{epoch, T}(year, month, day)
+    FlexDate{epoch}(days::T)
+
+Construct an object representing a given date as the number of days (stored in
+type `T`) since `epoch`, which is a `Date` object.
+
+When `T` is to narrow to represent a particular date, an `InexactError` is
+thrown.
+
+For working with a particular dataset, it is convenient to define a type
+constant and work with that instead:
+
+```julia
+const MyDate = FlexDate{Date(2001, 1, 1), Int16}
+
+MyDate(2010, 4, 31)
+```
+
+Limited arithmetic and comparisons are supported, but are fastest when using the
+same epoch (unless conversion to `Date` may occur). For timespans, use `..`
+(ClosedInterval) from `IntervalSets`.
+"""
 struct FlexDate{E, T <: Integer}
     Δ::T
     function FlexDate{E}(Δ::T) where {E, T <: Integer}
@@ -21,6 +45,12 @@ end
 FlexDate{E, T}(year, month, day) where {E, T} =
     FlexDate{E, T}(Date(year, month, day))
 
+"""
+    FlexDay(d)
+
+Number of days between `FlexDate`s. Uses the given integer type. Limited
+arithmetic is supported.
+"""
 struct FlexDay{T <: Integer}
     d::T
 end
