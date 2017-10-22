@@ -1,6 +1,6 @@
 module FlexDates
 
-import IntervalSets: ClosedInterval
+import DiscreteRanges: isdiscrete, discrete_gap, discrete_next, DiscreteRange
 
 import Base:
     convert, eltype, show,
@@ -129,13 +129,17 @@ hash(x::FlexDate, h::UInt) = hash(convert(Date, x), h)
 
 convert(::Type{FlexDay{T}}, x::S) where {T, S <: Integer} = FlexDay(T(x))
 
-function show(io::IO, A::ClosedInterval{FlexDate{E,T}}) where {E,T}
-    print(io, convert(Date, A.left))
+# support for DiscreteRanges
+
+function show(io::IO, D::DiscreteRange{FlexDate{E,T}}) where {E,T}
+    print(io, convert(Date, D.left))
     print(io, "..")
-    print(io, convert(Date, A.right))
+    print(io, convert(Date, D.right))
     _print_ET(io, E, T)
 end
 
-length(A::ClosedInterval{<:FlexDate}) = max(0, A.right.Δ - A.left.Δ + 1)
+isdiscrete(::Type{<:FlexDate}) = true
+discrete_gap(x::FlexDate{E,T}, y::FlexDate{E,T}) where {E,T} = x.Δ - y.Δ
+discrete_next(x::FlexDate{E,T}, Δ) where {E,T} = FlexDate{E}(T(x.Δ + Δ))
 
 end # module
