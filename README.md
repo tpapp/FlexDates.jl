@@ -69,10 +69,10 @@ calculations. A single dataset should use a single epoch unless there
 is a compelling reason to do otherwise.
 
 For timespans, it is recommended that you use
-[IntervalSets.jl](https://github.com/JuliaMath/IntervalSets.jl):
+[DiscreteRanges.jl](https://github.com/tpapp/DiscreteRanges.jl):
 
 ```julia
-julia> using  IntervalSets
+julia> using DiscreteRanges
 
 julia> MyDate(2003, 4, 8) ∈ MyDate(2001, 1, 1)..MyDate(2010, 1, 1)
 true
