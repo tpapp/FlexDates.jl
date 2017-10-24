@@ -28,7 +28,7 @@ git:
 ## uncomment the following lines to override the default test script
 script:
   - echo $PWD
-  - ls
+  - ls -l
   - julia test-scipt.jl
 after_success:
   # push coverage results to Coveralls
