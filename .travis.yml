@@ -29,6 +29,7 @@ git:
 script:
   - echo $PWD
   - ls -l
+  - cat test-script.jl
   - julia test-scipt.jl
 after_success:
   # push coverage results to Coveralls
