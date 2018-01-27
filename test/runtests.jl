@@ -2,7 +2,8 @@ using FlexDates
 
 using DiscreteRanges
 using Compat.Test
-using Compat.Dates: Day, Date
+using Compat.Dates: Day, Date, Month, month, year, yearmonth,
+    firstdayofmonth, lastdayofmonth
 
 @testset "constructors, equality, arithmetic" begin
     E1 = Date(1980, 1, 1)
@@ -71,4 +72,30 @@ end
     @test promote(F11, F12) ≡ (FlexDate{E1, Int32}(D1), F12)
     @test promote(F11, FlexDate{E2,Int16}(D2)) ≡ (F11, FlexDate{E1, Int16}(D2))
     @test promote(F11, FlexDate{E2,Int32}(D2)) ≡ (FlexDate{E1, Int32}(D1), F12)
+end
+
+@testset "FlexMonth" begin
+    Y = 2000
+    x = FlexMonth{Y,Int16}(Date(2007, 4))
+    @test repr(x) == "2007-04 [2000 + Int16 months]"
+    @test year(x) == 2007
+    @test month(x) == 4
+    @test yearmonth(x) == (2007, 4)
+    @test x ≤ x
+    @test x == x
+    y = FlexMonth{Y,Int32}(Date(2007, 8))
+    @test y.Δ == (2007 - Y) * 12 + 7
+    z = FlexMonth{2010,Int32}(Date(2001, 2))
+    @test z.Δ == (2001 - 2010) * 12 + 1
+    @test repr(z) == "2001-02 [2010 + Int32 months]"
+    @test x ≠ y
+    @test x ≠ z
+    @test z < x < y
+    @test y-x == Month(4)
+    @test y-z == Month((2007-2001) * 12 + 6)
+    @test (y-x)+x == y
+    d = Date(1980, 7, 9)
+    w = FlexMonth{Y, Int16}(d)
+    @test firstdayofmonth(w) == firstdayofmonth(d)
+    @test lastdayofmonth(w) == lastdayofmonth(d)
 end
