@@ -1,6 +1,10 @@
+__precompile__()
 module FlexDates
 
-import DiscreteRanges: isdiscrete, discrete_gap, discrete_next, DiscreteRange
+using Compat.Dates: Date, Day, value
+
+using DiscreteRanges: DiscreteRange
+import DiscreteRanges: isdiscrete, discrete_gap, discrete_next
 
 import Base:
     convert, eltype, show,
@@ -8,7 +12,7 @@ import Base:
     ==, +, -, zero, oneunit,
     hash, promote, length
 
-export FlexDate, FlexDay
+export FlexDate
 
 """
     FlexDate{epoch, T}(date::Date)
@@ -32,7 +36,7 @@ MyDate(2010, 4, 31)
 
 Limited arithmetic and comparisons are supported, but are fastest when using the
 same epoch (unless conversion to `Date` may occur). For timespans, use `..`
-(ClosedInterval) from `IntervalSets`.
+(DiscreteRange) from `DiscreteRanges`.
 """
 struct FlexDate{E, T <: Integer}
     Δ::T
@@ -44,16 +48,6 @@ end
 
 FlexDate{E, T}(year, month, day) where {E, T} =
     FlexDate{E, T}(Date(year, month, day))
-
-"""
-    FlexDay(d)
-
-Number of days between `FlexDate`s. Uses the given integer type. Limited
-arithmetic is supported.
-"""
-struct FlexDay{T <: Integer}
-    d::T
-end
 
 _print_ET(io, E, T) = print(io, " [$(E) + $(T) days]")
 
@@ -90,16 +84,6 @@ isless(x::FlexDate{E}, y::Date) where E = isless(convert(Date, x), y)
 
 isless(x::Date, y::FlexDate{E}) where E = isless(x, convert(Date, y))
 
-isless(x::FlexDay, y::FlexDay) = isless(x.d, y.d)
-
-zero(::Type{FlexDay{T}}) where T = FlexDay(zero(T))
-
-zero(x::T) where {T <: FlexDay} = zero(T)
-
-oneunit(::Type{FlexDay{T}}) where T = FlexDay(one(T))
-
-oneunit(x::T) where {T <: FlexDay} = oneunit(T)
-
 typemin(::Type{FlexDate{E, T}}) where {E, T} = FlexDate{E, T}(typemin(T))
 
 typemax(::Type{FlexDate{E, T}}) where {E, T} = FlexDate{E, T}(typemax(T))
@@ -117,17 +101,14 @@ eltype(x::FlexDate{E, T}) where {E, T} = T
 
 hash(x::FlexDate, h::UInt) = hash(convert(Date, x), h)
 
-(-)(x::FlexDate{E,T}, y::FlexDate{E,T}) where {E, T} = FlexDay{T}(x.Δ - y.Δ)
+(-)(x::FlexDate{E, T}, y::FlexDate{E, T}) where {E, T} = Day(x.Δ - y.Δ)
 
-(+)(x::FlexDate{E}, y::FlexDay) where E = FlexDate{E}(x.Δ + y.d)
+# NOTE: arithmetic remains in the given type T, over/underflow is an error
+# convert to `Date` for calculations with large spans, FlexDate is a storage
+# format.
+(+)(x::FlexDate{E, T}, y::Day) where {E, T} = FlexDate{E}(T(x.Δ + value(y)))
 
-(-)(x::FlexDate{E}, y::FlexDay) where E = FlexDate{E}(x.Δ - y.d)
-
-(+)(x::FlexDay, y::FlexDay) = FlexDay(x.d + y.d)
-
-(-)(x::FlexDay, y::FlexDay) = FlexDay(x.d - y.d)
-
-convert(::Type{FlexDay{T}}, x::S) where {T, S <: Integer} = FlexDay(T(x))
+(-)(x::FlexDate{E, T}, y::Day) where {E, T} = FlexDate{E}(T(x.Δ - value(y)))
 
 # support for DiscreteRanges
 

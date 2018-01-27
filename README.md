@@ -18,11 +18,7 @@ often sufficient. For example, `Int16` can represent days spanning a
 bit more than 179 years (`2^16/365`), while `Int32` works for a bit
 more than 10 million years.
 
-This package helps with the management of dates, relying on
-`Base.Dates` to do most of the tricky bits of date calculations. The
-main type in this package, `FlexDate`, is intended primarily as a
-*storage* format: using more compact dates, you can economize on
-memory and disk consumption.
+This package helps with the management of dates, relying on `Base.Dates` to do most of the tricky bits of date calculations. The main type in this package, `FlexDate`, is intended primarily as a *storage* format: using more compact dates, you can economize on memory and disk consumption.
 
 ## Installation
 
@@ -34,12 +30,7 @@ Pkg.clone("https://github.com/tpapp/FlexDates.jl")
 
 ## Usage
 
-You need to choose an *epoch*, a particular date we count from. This
-is incorporated into the type: Julia's zero cost abstraction ensures
-that there is no storage overhead when values are unboxed (eg
-arrays). The second type parameter for `FlexDate` is the integer type
-for internal representation. Constructors accept dates, `year, month,
-day`, or a single integer counting the number of days.
+You need to choose an *epoch*, a particular date we count from. This is incorporated into the type: Julia's zero cost abstraction ensures that there is no storage overhead when values are unboxed (eg arrays). The second type parameter for `FlexDate` is the integer type for internal representation. Constructors accept dates, `year, month, day`, or a single integer counting the number of days.
 
 The following constructors are equivalent:
 ```julia
@@ -62,11 +53,9 @@ const MyDate = FlexDate{Date(2000,1,1), Int16}
 MyDate(1980, 1, 1)
 ```
 
-Limited arithmetic and comparisons are supported. Keep in mind that
-these operations will be fast when you use dates with the *same
-epoch*, otherwise dates will be converted back to `Date` for
-calculations. A single dataset should use a single epoch unless there
-is a compelling reason to do otherwise.
+Limited arithmetic and comparisons are supported. Keep in mind that these operations will be fast when you use dates with the *same epoch*, otherwise dates will be converted back to `Date` for calculations. A single dataset should use a single epoch unless there is a compelling reason to do otherwise.
+
+For sophisticated arithmetic and date calculations, convert to `Date`, since `FlexDate` is meant primarily as a storage format.
 
 For timespans, it is recommended that you use
 [DiscreteRanges.jl](https://github.com/tpapp/DiscreteRanges.jl):

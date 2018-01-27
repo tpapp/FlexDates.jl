@@ -1,6 +1,8 @@
 using FlexDates
-using Base.Test
+
 using DiscreteRanges
+using Compat.Test
+using Compat.Dates: Day, Date
 
 @testset "constructors, equality, arithmetic" begin
     E1 = Date(1980, 1, 1)
@@ -26,18 +28,14 @@ using DiscreteRanges
     @test F5 < E1 < F4
     @test F3 == E1
 
-    @test F5 - F3 == FlexDay{Int64}(-5)
-    @test F3 + FlexDay{Int32}(5) == F4
-    @test F3 - FlexDay{Int32}(5) == F5
+    @test F5 - F3 == Day(-5)
+    @test F3 + Day(5) == F4
+    @test F3 - Day(5) == F5
 
     @test length(F3..F4) == 6
     @test length(F4..F3) == 0
-end
 
-@testset "FlexDay arithmetic" begin
-    @test isless(FlexDay(1), FlexDay(Int16(2)))
-    @test FlexDay(Int32(2)) + FlexDay(Int16(9)) == FlexDay(Int32(11))
-    @test FlexDay(Int32(2)) - FlexDay(Int16(9)) == FlexDay(Int32(-7))
+    @test_throws InexactError F11 + Day(typemax(Int16) + 1)
 end
 
 @testset "FlexDate hashing" begin
