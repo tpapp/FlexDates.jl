@@ -1,4 +1,4 @@
-Pkg.clone("https://github.com/tpapp/DiscreteRanges.jl.git")
-Pkg.clone(pwd())
-Pkg.build("FlexDates")
-Pkg.test("FlexDates"; coverage=true)
+using Pkg
+Pkg.activate(".")
+Pkg.build()
+Pkg.test(; coverage=true)
