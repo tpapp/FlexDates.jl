@@ -8,24 +8,21 @@
 
 ## Motivation
 
-Julia `Date`s in `Base` represent a particular day counting from
-`0001-01-01` as the first day, using `Int64`. This allows the user to
-use dates in the interval of ±2.5e16 years, starting well before the
-Big Bang, and continuing way after the sun dies.
+Julia `Date`s in the standard library `Dates` represent a particular day counting from `0001-01-01` as the first day, using `Int64`. This allows the user to use dates in the interval of ±2.5e16 years, starting well before the Big Bang, and continuing way after the sun dies.
 
 For the modest needs of social science data, a more limited range is
 often sufficient. For example, `Int16` can represent days spanning a
 bit more than 179 years (`2^16/365`), while `Int32` works for a bit
 more than 10 million years.
 
-This package helps with the management of dates, relying on `Base.Dates` to do most of the tricky bits of date calculations. The main type in this package, `FlexDate`, is intended primarily as a *storage* format: using more compact dates, you can economize on memory and disk consumption.
+This package helps with the management of dates, relying on `Dates` to do most of the tricky bits of date calculations. The main type in this package, `FlexDate`, is intended primarily as a *storage* format: using more compact dates, you can economize on memory and disk consumption.
 
 ## Installation
 
 The package is not (yet) registered. Install with
 
 ```julia
-Pkg.clone("https://github.com/tpapp/FlexDates.jl")
+pkg> add https://github.com/tpapp/FlexDates.jl
 ```
 
 ## Usage
