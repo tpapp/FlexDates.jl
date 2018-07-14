@@ -1,7 +1,7 @@
 __precompile__()
 module FlexDates
 
-using Compat.Dates: Date, Day, value
+using Dates: Date, Day, days, value
 
 using DiscreteRanges: DiscreteRange
 import DiscreteRanges: isdiscrete, discrete_gap, discrete_next
@@ -46,6 +46,8 @@ struct FlexDate{E, T <: Integer}
     end
 end
 
+FlexDate{E, T}(d::Integer) where {E, T <: Integer} = FlexDate{E}(T(Δ))
+
 FlexDate{E, T}(year, month, day) where {E, T} =
     FlexDate{E, T}(Date(year, month, day))
 
@@ -59,7 +61,7 @@ end
 function promote(x::FlexDate{Ex, <: Integer},
                  y::FlexDate{Ey, <: Integer }) where {Ex, Ey}
     xΔ, yΔ = promote(x.Δ, y.Δ)
-    FlexDate{Ex}(xΔ), FlexDate{Ex}(oftype(yΔ, yΔ + Dates.days(Ey-Ex)))
+    FlexDate{Ex}(xΔ), FlexDate{Ex}(oftype(yΔ, yΔ + days(Ey-Ex)))
 end
 
 function promote(x::FlexDate{E, <: Integer}, y::FlexDate{E, <: Integer}) where E
@@ -68,12 +70,14 @@ function promote(x::FlexDate{E, <: Integer}, y::FlexDate{E, <: Integer}) where E
 end
 
 function convert(::Type{Date}, flexdate::FlexDate{E}) where E
-    E + Dates.Day(flexdate.Δ)
+    E + Day(flexdate.Δ)
 end
 
 function convert(::Type{FlexDate{E,T}}, date::Date) where {E, T}
-    FlexDate{E}(T(Dates.days(date - E)))
+    FlexDate{E}(T(days(date - E)))
 end
+
+FlexDate{E,T}(date::Date) where {E,T} = convert(FlexDate{E,T}, date)
 
 isless(x::FlexDate{E}, y::FlexDate{E}) where E = isless(x.Δ, y.Δ)
 

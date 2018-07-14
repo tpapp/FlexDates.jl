@@ -1,0 +1,8 @@
+name = "FlexDates"
+uuid = "a908c390-8760-11e8-3c16-458b71732656"
+authors = ["Tamas K. Papp <tkpapp@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+DiscreteRanges = "43333080-875b-11e8-0ef4-e3a7ce213dc7"

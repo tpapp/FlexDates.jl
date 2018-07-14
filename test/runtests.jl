@@ -1,8 +1,8 @@
 using FlexDates
 
-using DiscreteRanges
-using Compat.Test
-using Compat.Dates: Day, Date
+using DiscreteRanges: DiscreteRange, (..)
+using Test
+using Dates: Day, Date
 
 @testset "constructors, equality, arithmetic" begin
     E1 = Date(1980, 1, 1)
@@ -45,7 +45,7 @@ end
 end
 
 @testset "interval (Int16)" begin
-    const FD = FlexDate{Date(2005,1,1), Int16}
+    FD = FlexDate{Date(2005,1,1), Int16}
 
     d1 = FD(2005, 1, 1)
     d2 = FD(2008, 3, 7)
