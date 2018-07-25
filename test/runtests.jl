@@ -59,6 +59,9 @@ end
     @test repr(d2) == "2008-03-07 [2005-01-01 + Int16 days]"
 
     @test repr(d1..d3) == "2005-01-01..2009-08-11 [2005-01-01 + Int16 days]"
+
+    @test typemax(FD) == FD(typemax(Int16))
+    @test typemin(FD) == FD(typemin(Int16))
 end
 
 @testset "promotion" begin

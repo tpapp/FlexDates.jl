@@ -46,7 +46,7 @@ struct FlexDate{E, T <: Integer}
     end
 end
 
-FlexDate{E, T}(d::Integer) where {E, T <: Integer} = FlexDate{E}(T(Δ))
+FlexDate{E, T}(Δ::Integer) where {E, T <: Integer} = FlexDate{E}(T(Δ))
 
 FlexDate{E, T}(year, month, day) where {E, T} =
     FlexDate{E, T}(Date(year, month, day))
