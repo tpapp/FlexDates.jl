@@ -55,7 +55,7 @@ _print_ET(io, E, T) = print(io, " [$(E) + $(T) days]")
 
 function show(io::IO, flexdate::FlexDate{E, T}) where {E, T}
     print(io, convert(Date, flexdate))
-    _print_ET(io, E, T)
+    get(io, :compact, false) || _print_ET(io, E, T)
 end
 
 function promote(x::FlexDate{Ex, <: Integer},
@@ -120,7 +120,7 @@ function show(io::IO, D::DiscreteRange{FlexDate{E,T}}) where {E,T}
     print(io, convert(Date, D.left))
     print(io, "..")
     print(io, convert(Date, D.right))
-    _print_ET(io, E, T)
+    get(io, :compact, false) || _print_ET(io, E, T)
 end
 
 isdiscrete(::Type{<:FlexDate}) = true
